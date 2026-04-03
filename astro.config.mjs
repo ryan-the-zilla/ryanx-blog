@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://ryanx.ai/blog',
+  site: 'https://ryan-the-zilla.github.io/ryanx-blog',
+  base: '/ryanx-blog',
   trailingSlash: 'never',
 });
