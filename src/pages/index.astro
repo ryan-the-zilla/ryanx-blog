@@ -12,7 +12,7 @@ const posts = (await getCollection('blog'))
     <div class="hero-badge">AI · Development · Strategy</div>
     <h1>Thoughts, experiments<br />and <span class="highlight">sharp takes</span>.</h1>
     <p class="hero-sub">Writing about AI, building in public, and the intersection of technology and thinking. No fluff.</p>
-    <a href="/blog" class="cta-button">Read the Blog →</a>
+    <a href={`${import.meta.env.BASE_URL}blog`} class="cta-button">Read the Blog →</a>
   </section>
 
   {posts.length > 0 && (
@@ -20,7 +20,7 @@ const posts = (await getCollection('blog'))
       <h2 class="section-title">Recent</h2>
       <div class="post-list">
         {posts.map(post => (
-          <a href={`/blog/${post.id}`} class="post-card">
+          <a href={`${import.meta.env.BASE_URL}blog/${post.id}`} class="post-card">
             <div class="post-card-meta">
               <time datetime={post.data.pubDate.toISOString()}>
                 {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
