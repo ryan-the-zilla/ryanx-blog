@@ -1,0 +1,158 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | RyanX Blog</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <nav>
+        <a href="/" class="logo">RyanX<span class="accent">.</span></a>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/blog">Blog</a>
+          <a href="https://ryanx.ai" target="_blank">About</a>
+        </div>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <p>&copy; {new Date().getFullYear()} RyanX. Built with Astro. Shipped with attitude.</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --bg: #0a0a0a;
+    --bg-elevated: #111111;
+    --bg-card: #161616;
+    --text: #e4e4e7;
+    --text-muted: #71717a;
+    --accent: #3b82f6;
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    --border: #27272a;
+    --radius: 12px;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  a:hover {
+    opacity: 0.8;
+  }
+
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(12px);
+    background: rgba(10, 10, 10, 0.8);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .site-header nav {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text) !important;
+    font-family: var(--font-mono);
+    letter-spacing: -0.5px;
+  }
+
+  .logo .accent {
+    color: var(--accent);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+
+  .nav-links a {
+    color: var(--text-muted) !important;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--text) !important;
+    opacity: 1;
+  }
+
+  main {
+    flex: 1;
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  .site-footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+  }
+</style>
+
+<script>
+  // Current page highlight
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    if (link.href === window.location.href) {
+      link.style.color = 'var(--text)';
+    }
+  });
+</script>
+
+

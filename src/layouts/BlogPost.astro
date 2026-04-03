@@ -1,0 +1,188 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+type Props = CollectionEntry<'blog'>['data'];
+
+const { title, pubDate, updatedDate, description, tags } = Astro.props;
+
+const formattedDate = new Date(pubDate).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const formattedUpdated = updatedDate
+  ? new Date(updatedDate).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : null;
+---
+
+<BaseLayout title={title}>
+  <article class="blog-post">
+    <header class="post-header">
+      <time datetime={pubDate.toISOString()} class="post-date">{formattedDate}</time>
+      {formattedUpdated && (
+        <span class="post-updated">Updated {formattedUpdated}</span>
+      )}
+      <h1 class="post-title">{title}</h1>
+      <p class="post-description">{description}</p>
+      {tags.length > 0 && (
+        <div class="post-tags">
+          {tags.map(tag => (
+            <span class="tag">#{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .post-updated {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-left: 0.5rem;
+    font-style: italic;
+  }
+
+  .post-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0.75rem 0 1rem;
+    letter-spacing: -1px;
+  }
+
+  .post-description {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+  }
+
+  .prose {
+    font-size: 1.05rem;
+  }
+
+  .prose :global(h2) {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 2.5rem 0 1rem;
+    letter-spacing: -0.5px;
+  }
+
+  .prose :global(h3) {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 2rem 0 0.75rem;
+  }
+
+  .prose :global(p) {
+    margin-bottom: 1.25rem;
+    color: #a1a1aa;
+  }
+
+  .prose :global(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .prose :global(ul), .prose :global(ol) {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+    color: #a1a1aa;
+  }
+
+  .prose :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .prose :global(blockquote) {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 1rem;
+    margin: 1.5rem 0;
+    background: var(--accent-glow);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    color: var(--text);
+    font-style: italic;
+  }
+
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    background: var(--bg-elevated);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: var(--accent);
+  }
+
+  .prose :global(pre) {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .prose :global(pre code) {
+    background: none;
+    padding: 0;
+    color: var(--text);
+    font-size: 0.9rem;
+  }
+
+  .prose :global(img) {
+    max-width: 100%;
+    border-radius: var(--radius);
+    margin: 1.5rem 0;
+  }
+
+  .prose :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 2.5rem 0;
+  }
+
+  @media (max-width: 640px) {
+    .post-title {
+      font-size: 1.75rem;
+    }
+  }
+</style>

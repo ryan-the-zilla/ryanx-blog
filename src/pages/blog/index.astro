@@ -1,0 +1,137 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const allTags = [...new Set(posts.flatMap(post => post.data.tags))].sort();
+---
+
+<BaseLayout title="Blog">
+  <section class="blog-header">
+    <h1>Blog</h1>
+    <p class="blog-sub">All posts. Chronological. No algorithm.</p>
+  </section>
+
+  <section class="tags-bar">
+    {allTags.map(tag => (
+      <span class="tag">#{tag}</span>
+    ))}
+  </section>
+
+  <div class="post-list">
+    {posts.map(post => (
+      <a href={`/blog/${post.id}`} class="post-card">
+        <div class="post-card-left">
+          <time class="post-date" datetime={post.data.pubDate.toISOString()}>
+            {post.data.pubDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+          </time>
+          <h2 class="post-title">{post.data.title}</h2>
+          <p class="post-desc">{post.data.description}</p>
+        </div>
+        <div class="post-card-right">
+          <span class="arrow">→</span>
+        </div>
+      </a>
+    ))}
+  </div>
+</BaseLayout>
+
+<style>
+  .blog-header {
+    padding: 3rem 0 1rem;
+  }
+
+  .blog-header h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+  }
+
+  .blog-sub {
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .tags-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1.5rem 0 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(59, 130, 246, 0.15);
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .post-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1rem;
+    border-radius: var(--radius);
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-card:last-child {
+    border-bottom: none;
+  }
+
+  .post-card:hover {
+    background: var(--bg-card);
+    opacity: 1 !important;
+  }
+
+  .post-date {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .post-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0.35rem 0;
+    color: var(--text);
+  }
+
+  .post-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .post-card-right {
+    flex-shrink: 0;
+    margin-left: 1rem;
+  }
+
+  .arrow {
+    color: var(--text-muted);
+    font-size: 1.25rem;
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .post-card:hover .arrow {
+    color: var(--accent);
+    transform: translateX(3px);
+  }
+</style>

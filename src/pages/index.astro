@@ -1,0 +1,166 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 5);
+---
+
+<BaseLayout title="Home">
+  <section class="hero">
+    <div class="hero-badge">AI · Development · Strategy</div>
+    <h1>Thoughts, experiments<br />and <span class="highlight">sharp takes</span>.</h1>
+    <p class="hero-sub">Writing about AI, building in public, and the intersection of technology and thinking. No fluff.</p>
+    <a href="/blog" class="cta-button">Read the Blog →</a>
+  </section>
+
+  {posts.length > 0 && (
+    <section class="recent-posts">
+      <h2 class="section-title">Recent</h2>
+      <div class="post-list">
+        {posts.map(post => (
+          <a href={`/blog/${post.id}`} class="post-card">
+            <div class="post-card-meta">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+              </time>
+              {post.data.tags.length > 0 && (
+                <span class="card-tag">{post.data.tags[0]}</span>
+              )}
+            </div>
+            <h3 class="post-card-title">{post.data.title}</h3>
+            <p class="post-card-desc">{post.data.description}</p>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 5rem 0 4rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    background: var(--accent-glow);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+  }
+
+  .hero h1 {
+    font-size: 3.25rem;
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -2px;
+    margin-bottom: 1.25rem;
+  }
+
+  .highlight {
+    background: linear-gradient(135deg, var(--accent), #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: var(--accent);
+    color: white !important;
+    padding: 0.75rem 1.75rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 20px var(--accent-glow);
+  }
+
+  .cta-button:hover {
+    transform: translateY(-1px);
+    opacity: 1 !important;
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+  }
+
+  .section-title {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .post-card {
+    display: block;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .post-card:hover {
+    border-color: rgba(59, 130, 246, 0.3);
+    background: var(--bg-card);
+    opacity: 1 !important;
+  }
+
+  .post-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 0.5rem;
+  }
+
+  .card-tag {
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 0.1rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+  }
+
+  .post-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+    color: var(--text);
+  }
+
+  .post-card-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  @media (max-width: 640px) {
+    .hero h1 {
+      font-size: 2.25rem;
+    }
+  }
+</style>
